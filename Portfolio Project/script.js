@@ -1,33 +1,21 @@
-// script.js
+// Robot movement
+const robotHead = document.querySelector('.robot-head');
+const pupils = document.querySelectorAll('.pupil');
 
-// Get elements
-const leftPupil = document.querySelector('.left-pupil');
-const rightPupil = document.querySelector('.right-pupil');
-
-// Mouse move event
 document.addEventListener('mousemove', (e) => {
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
+    const rect = robotHead.getBoundingClientRect();
+    const headCenterX = rect.left + rect.width / 2;
+    const headCenterY = rect.top + rect.height / 2;
 
-    // Get eye position
-    const leftEyeRect = leftPupil.parentElement.getBoundingClientRect();
-    const rightEyeRect = rightPupil.parentElement.getBoundingClientRect();
+    const angleX = (e.clientX - headCenterX) / 50;
+    const angleY = (e.clientY - headCenterY) / 50;
 
-    // Calculate movement for left pupil
-    const leftEyeCenterX = leftEyeRect.left + leftEyeRect.width / 2;
-    const leftEyeCenterY = leftEyeRect.top + leftEyeRect.height / 2;
-    const leftAngle = Math.atan2(mouseY - leftEyeCenterY, mouseX - leftEyeCenterX);
-    const leftMoveX = Math.cos(leftAngle) * 10;
-    const leftMoveY = Math.sin(leftAngle) * 10;
+    // Head movement
+    robotHead.style.transform = `rotateX(${-angleY}deg) rotateY(${angleX}deg)`;
 
-    // Calculate movement for right pupil
-    const rightEyeCenterX = rightEyeRect.left + rightEyeRect.width / 2;
-    const rightEyeCenterY = rightEyeRect.top + rightEyeRect.height / 2;
-    const rightAngle = Math.atan2(mouseY - rightEyeCenterY, mouseX - rightEyeCenterX);
-    const rightMoveX = Math.cos(rightAngle) * 10;
-    const rightMoveY = Math.sin(rightAngle) * 10;
-
-    // Move pupils
-    leftPupil.style.transform = `translate(-50%, -50%) translate(${leftMoveX}px, ${leftMoveY}px)`;
-    rightPupil.style.transform = `translate(-50%, -50%) translate(${rightMoveX}px, ${rightMoveY}px)`;
+    // Pupils follow
+    pupils.forEach(pupil => {
+        pupil.style.transform = `translate(${angleX * 2}px, ${angleY * 2}px)`;
+    });
 });
+
